@@ -20,7 +20,6 @@ echo "⚠️  Important: macOS notification permission may be required on first 
 
 # Send test notification
 echo "📨 Sending test notification..."
-# terminal-notifier -message "Setup completed!" -title "Dev Container Notifier Test" -sound default
 terminal-notifier -message "Successfully setup!" -title "Dev Container Notifier Test" -sound default
 
 echo ""

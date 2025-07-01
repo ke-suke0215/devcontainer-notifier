@@ -3,7 +3,7 @@ const http = require("http");
 const { exec } = require("child_process");
 
 const server = http.createServer((req, res) => {
-  // CORS対応
+  // Enable CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -23,14 +23,14 @@ const server = http.createServer((req, res) => {
         const title = data.title || "Dev Container";
         const message = data.message || "Notification";
 
-        // terminal-notifierで通知送信
+        // Send notification using terminal-notifier
         exec(
           `terminal-notifier -message "${message}" -title "${title}" -sound default`,
           (error) => {
             if (error) {
-              console.error("通知エラー:", error);
+              console.error("Notification error:", error);
             } else {
-              console.log(`通知送信: [${title}] ${message}`);
+              console.log(`Notification sent: [${title}] ${message}`);
             }
           }
         );
@@ -40,7 +40,7 @@ const server = http.createServer((req, res) => {
           JSON.stringify({ status: "success", message: "Notification sent" })
         );
       } catch (e) {
-        console.error("JSONパースエラー:", e);
+        console.error("JSON parse error:", e);
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ status: "error", message: "Invalid JSON" }));
       }
@@ -53,5 +53,5 @@ const server = http.createServer((req, res) => {
 
 const PORT = 37842;
 server.listen(PORT, () => {
-  console.log(`通知サーバーを起動: http://localhost:${PORT}`);
+  console.log(`Notification server started: http://localhost:${PORT}`);
 });

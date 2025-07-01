@@ -1,71 +1,82 @@
 # Dev Container Notification Server
 
-開発コンテナ（Dev Container）からホストの macOS に通知を送信するためのシンプルな HTTP サーバーです。
+A simple HTTP server for sending desktop notifications from development containers (Dev Container) to the host macOS.
 
-## 💡 使い方の概要
+## 💡 Usage Overview
 
-1. **ホスト PC でこのサーバーを起動**（macOS）
-2. **Dev Container 内から HTTP リクエストを送信**（任意の環境）
-3. **macOS のデスクトップに通知が表示される**
+1. **Start this server on the host PC** (macOS)
+2. **Send HTTP requests from Dev Container** (any environment)
+3. **Desktop notifications appear on macOS**
 
-Claude Code やその他の開発ツールを並列で実行する際に、作業の完了を通知で受け取ることができます。
+You can receive completion notifications when running Claude Code or other development tools in parallel.
 
-## 🎯 用途
+## 🎯 Use Cases
 
-- **開発コンテナからの通知**: Docker コンテナ内からホストマシンに通知を送信
-- **並列開発作業**: 複数の Claude Code セッションや開発タスクの完了通知
-- **長時間処理の完了通知**: ビルドやテスト実行の完了をデスクトップ通知で確認
+- **Notifications from development containers**: Send notifications from Docker containers to the host machine
+- **Parallel development work**: Completion notifications for multiple Claude Code sessions or development tasks
+- **Long-running process completion**: Desktop notifications for build or test execution completion
 
-## 📋 必要な環境
+## 📋 Requirements
 
-- **macOS** (terminal-notifier を使用)
-- **Node.js** (v12 以上推奨)
-- **terminal-notifier** (Homebrew でインストール)
+- **macOS** (uses terminal-notifier)
+- **Node.js** (v12 or higher recommended)
+- **terminal-notifier** (installed via Homebrew)
 
-## 🚀 セットアップ
+## 🚀 Setup
 
-### 1. terminal-notifier のインストール
-
-```bash
-brew install terminal-notifier
-```
-
-### 2. macOS 通知許可の設定
-
-> **注意**: terminal-notifier が初回実行時に通知許可を求める場合があります。通知が表示されない場合は、macOS のシステム設定から terminal-notifier の通知許可を有効にしてください。
-
-### 3. サーバーの起動
+### Run Setup Script
 
 ```bash
-node server.js
+./setup.sh
 ```
 
-サーバーが起動すると以下のメッセージが表示されます：
+This script automatically performs the following:
+- Install terminal-notifier (if not already installed)
+- Start the notification server
+
+### Manual Setup (Optional)
+
+For manual setup, follow these steps:
+
+1. **Install terminal-notifier**
+   ```bash
+   brew install terminal-notifier
+   ```
+
+2. **Configure macOS Notification Permissions**
+   > **Note**: terminal-notifier may request notification permission on first run. If notifications don't appear, enable terminal-notifier notification permission in macOS System Settings.
+
+3. **Start the Server**
+   ```bash
+   node server.js
+   ```
+
+When the server starts, you'll see this message:
 
 ```
 通知サーバーを起動: http://localhost:37842
 ```
 
-## 📡 使用方法
+## 📡 Usage
 
-### 基本的な通知送信
+### Basic Notification Sending
 
 ```bash
 curl -s -X POST http://localhost:37842/notify \
   -H "Content-Type: application/json" \
-  -d '{"title": "作業完了", "message": "ビルドが完了しました"}'
+  -d '{"title": "Task Complete", "message": "Build completed successfully"}'
 ```
 
-### Container 内からの使用例
+### Usage from Container
 
 ```bash
-# ビルド完了後に通知
+# Send notification after build completion
 npm run build && curl -s -X POST http://host.docker.internal:37842/notify \
   -H "Content-Type: application/json" \
-  -d '{"title": "Build Complete", "message": "プロジェクトのビルドが完了しました"}'
+  -d '{"title": "Build Complete", "message": "Project build completed successfully"}'
 ```
 
-### JavaScript からの使用例
+### JavaScript Usage Example
 
 ```javascript
 async function sendNotification(title, message) {
@@ -79,36 +90,36 @@ async function sendNotification(title, message) {
     });
 
     const result = await response.json();
-    console.log("通知送信:", result);
+    console.log("Notification sent:", result);
   } catch (error) {
-    console.error("通知エラー:", error);
+    console.error("Notification error:", error);
   }
 }
 
-// 使用例
-sendNotification("テスト完了", "すべてのテストが正常に完了しました");
+// Usage example
+sendNotification("Test Complete", "All tests passed successfully");
 ```
 
-## 🔧 API 仕様
+## 🔧 API Specification
 
-### エンドポイント
+### Endpoint
 
 - **URL**: `http://localhost:37842/notify`
-- **メソッド**: `POST`
+- **Method**: `POST`
 - **Content-Type**: `application/json`
 
-### リクエスト形式
+### Request Format
 
 ```json
 {
-  "title": "通知のタイトル（省略可）",
-  "message": "通知メッセージ（省略可）"
+  "title": "Notification title (optional)",
+  "message": "Notification message (optional)"
 }
 ```
 
-### レスポンス形式
+### Response Format
 
-**成功時:**
+**Success:**
 
 ```json
 {
@@ -117,7 +128,7 @@ sendNotification("テスト完了", "すべてのテストが正常に完了し�
 }
 ```
 
-**エラー時:**
+**Error:**
 
 ```json
 {
@@ -126,25 +137,25 @@ sendNotification("テスト完了", "すべてのテストが正常に完了し�
 }
 ```
 
-## 🛠️ カスタマイズ
+## 🛠️ Customization
 
-### ポート番号の変更
+### Changing Port Number
 
-`server.js`の 54 行目を編集：
+Edit line 54 in `server.js`:
 
 ```javascript
-const PORT = 37842; // 任意のポート番号に変更
+const PORT = 37842; // Change to any port number
 ```
 
-## 🔒 セキュリティ注意事項
+## 🔒 Security Notes
 
-- このサーバーは開発環境での使用を想定しており、本番環境での使用は推奨されません
-- 外部からのアクセスを制限したい場合は、ファイアウォール設定を確認してください
+- This server is intended for development environments and is not recommended for production use
+- If you want to restrict external access, check your firewall settings
 
-## 📝 ライセンス
+## 📝 License
 
 MIT License
 
-## 🤝 貢献
+## 🤝 Contributing
 
-バグ報告や機能要望は Issues でお知らせください。プルリクエストも歓迎します。
+Please report bugs or feature requests via Issues. Pull requests are welcome.

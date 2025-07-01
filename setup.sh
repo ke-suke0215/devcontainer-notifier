@@ -1,36 +1,36 @@
 #!/bin/bash
 
 # Dev Container Notification Server Setup Script
-# このスクリプトは terminal-notifier のインストールからサーバー起動まで自動化します
+# This script automates terminal-notifier installation and server startup
 
-set -e  # エラー時に停止
+set -e  # Stop on error
 
-echo "🚀 Dev Container Notification Server セットアップを開始します..."
+echo "🚀 Starting Dev Container Notification Server setup..."
 
-# terminal-notifier の確認とインストール
+# Check and install terminal-notifier
 if ! command -v terminal-notifier &> /dev/null; then
-    echo "📥 terminal-notifier をインストールします..."
+    echo "📥 Installing terminal-notifier..."
     brew install terminal-notifier
 else
-    echo "✅ terminal-notifier が既にインストールされています"
+    echo "✅ terminal-notifier is already installed"
 fi
 
-# 通知許可の案内
-echo "⚠️  重要: 初回実行時は macOS の通知許可が必要な場合があります\n"
+# Notification permission guidance
+echo "⚠️  Important: macOS notification permission may be required on first run\n"
 
-# テスト通知の送信
-echo "📨 テスト通知を送信します..."
-# terminal-notifier -message "セットアップが完了しました！" -title "Dev Container Notifier Test" -sound default
+# Send test notification
+echo "📨 Sending test notification..."
+# terminal-notifier -message "Setup completed!" -title "Dev Container Notifier Test" -sound default
 terminal-notifier -message "Successfully setup!" -title "Dev Container Notifier Test" -sound default
 
 echo ""
 
-# 使用方法の表示
-echo "📋 サーバー起動後の使用方法:"
+# Display usage instructions
+echo "📋 Usage after server startup:"
 echo "curl -s -X POST http://localhost:37842/notify \\"
 echo "  -H \"Content-Type: application/json\" \\"
-echo "  -d '{\"title\": \"作業完了\", \"message\": \"ビルドが完了しました\"}'"
+echo "  -d '{\"title\": \"Task Complete\", \"message\": \"Build completed successfully\"}'"
 echo ""
 
-# サーバー起動
+# Start server
 node server.js

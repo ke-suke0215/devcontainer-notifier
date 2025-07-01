@@ -1,6 +1,14 @@
 # Dev Container Notification Server
 
-開発コンテナ（Dev Container）からホストの macOS に通知を送信するためのシンプルな HTTP サーバーです。Claude Code やその他の開発ツールを並列で実行する際に、作業の完了を通知で受け取ることができます。
+開発コンテナ（Dev Container）からホストの macOS に通知を送信するためのシンプルな HTTP サーバーです。
+
+## 💡 使い方の概要
+
+1. **ホスト PC でこのサーバーを起動**（macOS）
+2. **Dev Container 内から HTTP リクエストを送信**（任意の環境）
+3. **macOS のデスクトップに通知が表示される**
+
+Claude Code やその他の開発ツールを並列で実行する際に、作業の完了を通知で受け取ることができます。
 
 ## 🎯 用途
 
